@@ -1292,7 +1292,7 @@ impl Ingredient {
                                 format_to_mime(&thumb_ref.format),
                                 data.into_owned(),
                             );
-                            claim.add_assertion(&thumbnail)?
+                            claim.add_created_assertion(&thumbnail)?
                         }
                     }
                 };
@@ -1316,7 +1316,7 @@ impl Ingredient {
                         format_to_mime(&data_ref.format),
                         box_data.into_owned(),
                     );
-                    claim.add_assertion(&embedded_data)?
+                    claim.add_created_assertion(&embedded_data)?
                 }
             };
 
@@ -1385,7 +1385,7 @@ impl Ingredient {
             .informational_uri
             .clone_from(&self.informational_uri);
         ingredient_assertion.data_types.clone_from(&self.data_types);
-        claim.add_assertion(&ingredient_assertion)
+        claim.add_created_assertion(&ingredient_assertion)
     }
 
     /// Asynchronously create an Ingredient from a binary manifest (.c2pa) and asset bytes,
