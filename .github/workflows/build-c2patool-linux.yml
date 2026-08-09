@@ -8,9 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Debian 12 (bookworm) container = glibc 2.36, matching the Railway
+    # railpack image the binary runs on. ubuntu-latest hosts glibc 2.39,
+    # which produced GLIBC_2.38/2.39-requiring binaries.
+    container: rust:bookworm
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
       - name: Build c2patool (release)
         run: cargo build --release -p c2patool
       - name: Package
@@ -18,7 +21,7 @@ jobs:
           mkdir -p dist
           cp target/release/c2patool dist/
           cd dist && tar -czf c2patool-listingsalive-linux-x64.tar.gz c2patool
-          shasum -a 256 c2patool-listingsalive-linux-x64.tar.gz | tee sha256.txt
+          sha256sum c2patool-listingsalive-linux-x64.tar.gz | tee sha256.txt
       - uses: actions/upload-artifact@v4
         with:
           name: c2patool-listingsalive-linux-x64
