@@ -1,0 +1,27 @@
+name: build-c2patool-linux
+
+on:
+  push:
+    branches:
+      - "listingsalive/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build c2patool (release)
+        run: cargo build --release -p c2patool
+      - name: Package
+        run: |
+          mkdir -p dist
+          cp target/release/c2patool dist/
+          cd dist && tar -czf c2patool-listingsalive-linux-x64.tar.gz c2patool
+          shasum -a 256 c2patool-listingsalive-linux-x64.tar.gz | tee sha256.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: c2patool-listingsalive-linux-x64
+          path: |
+            dist/c2patool-listingsalive-linux-x64.tar.gz
+            dist/sha256.txt
